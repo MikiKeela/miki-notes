@@ -45,6 +45,33 @@
   #tip{margin-top:14px;padding:11px;background:#0F1824;border:1px solid #1E3A5F;border-radius:8px;font-family:monospace;font-size:11px;color:#64748B}
 
   @media(min-width:600px){.item{grid-template-columns:180px 1fr}.term{font-size:12.5px}.def{font-size:13px}}
+
+  /* Subnet Calculator */
+  .calc-box{background:#12131E;border:1px solid #1E2030;border-radius:10px;padding:14px;margin-bottom:12px}
+  .calc-label{font-size:11px;color:#64748B;font-family:monospace;margin-bottom:5px;display:block}
+  .calc-row{display:flex;gap:8px;align-items:stretch}
+  .calc-input{flex:1;padding:10px 12px;border-radius:8px;border:1px solid #2A2A3A;background:#0D0E14;color:#E2E8F0;font-size:15px;font-family:monospace;outline:none}
+  .calc-input:focus{border-color:#0EA5E9}
+  .calc-prefix{width:72px;padding:10px 8px;border-radius:8px;border:1px solid #2A2A3A;background:#0D0E14;color:#E2E8F0;font-size:15px;font-family:monospace;outline:none;text-align:center}
+  .calc-prefix:focus{border-color:#0EA5E9}
+  .calc-btn{padding:10px 18px;border-radius:8px;border:none;background:#0EA5E9;color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit}
+  .calc-btn:active{background:#0284C7}
+  .calc-err{color:#F87171;font-size:12px;margin-top:6px;font-family:monospace}
+  .result-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:4px}
+  .result-item{background:#0D0E14;border-radius:7px;padding:9px 10px;border-left:3px solid #0EA5E9}
+  .result-item.full{grid-column:1/-1}
+  .result-item.green{border-color:#22C55E}
+  .result-item.red{border-color:#EF4444}
+  .result-item.yellow{border-color:#EAB308}
+  .result-item.purple{border-color:#A855F7}
+  .r-label{font-size:10px;color:#64748B;font-family:monospace;margin-bottom:3px}
+  .r-val{font-size:13px;font-weight:700;font-family:monospace;color:#E2E8F0;word-break:break-all}
+  .r-bin{font-size:9px;color:#475569;font-family:monospace;margin-top:2px;word-break:break-all;line-height:1.5}
+  .cheat-table{width:100%;border-collapse:collapse;font-family:monospace;font-size:11.5px;margin-top:4px}
+  .cheat-table th{background:#1A1A28;color:#94A3B8;padding:6px 8px;text-align:left;font-weight:600;border-bottom:1px solid #2A2A3A}
+  .cheat-table td{padding:6px 8px;border-bottom:1px solid #1E2030;color:#CBD5E1}
+  .cheat-table tr:last-child td{border-bottom:none}
+  .cheat-table tr:hover td{background:#1A1A28}
 </style>
 </head>
 <body>
@@ -359,24 +386,174 @@ function render() {
 function buildCats() {
   const cats = document.getElementById("cats");
   cats.innerHTML = `<button class="cat-btn active" style="background:#CC2936;color:#fff" onclick="setCat('all',this)">All</button>` +
-    DATA.map(cat => `<button class="cat-btn" onclick="setCat('${cat.id}',this)">${cat.title.split(" ").slice(1).join(" ")}</button>`).join("");
+    DATA.map(cat => `<button class="cat-btn" onclick="setCat('${cat.id}',this)">${cat.title.split(" ").slice(1).join(" ")}</button>`).join("") +
+    `<button class="cat-btn" onclick="setCat('calc',this)">🧮 Subnet Calc</button>`;
 }
 
 function setCat(id, btn) {
   activeCat = id;
+  document.getElementById("search").style.display = id === "calc" ? "none" : "";
   document.querySelectorAll(".cat-btn").forEach(b => {
     b.classList.remove("active");
     b.style.background = "#1E1E30";
     b.style.color = "#64748B";
   });
   btn.classList.add("active");
+  if (id === "calc") {
+    btn.style.background = "#0EA5E9";
+    btn.style.color = "#fff";
+    showCalc();
+    return;
+  }
   const cat = DATA.find(c => c.id === id);
   btn.style.background = id === "all" ? "#CC2936" : cat.color;
   btn.style.color = "#fff";
   render();
 }
 
-if ("serviceWorker" in navigator) {
+function showCalc() {
+  const content = document.getElementById("content");
+  content.innerHTML = `
+    <div class="calc-box">
+      <span class="calc-label">IP ADDRESS + PREFIX (e.g. 192.168.1.50/24)</span>
+      <div class="calc-row">
+        <input class="calc-input" id="ci" placeholder="192.168.1.50" oninput="autoCalc()" onkeydown="if(event.key==='Enter')calcSubnet()">
+        <input class="calc-prefix" id="cp" type="number" min="0" max="32" value="24" oninput="autoCalc()">
+        <button class="calc-btn" onclick="calcSubnet()">Calc</button>
+      </div>
+      <div id="calc-err" class="calc-err" style="display:none"></div>
+    </div>
+    <div id="calc-result"></div>
+    <div class="calc-box" style="margin-top:8px">
+      <span class="calc-label" style="margin-bottom:8px">CIDR CHEAT SHEET</span>
+      <table class="cheat-table">
+        <tr><th>CIDR</th><th>Subnet Mask</th><th>Hosts</th><th>Use case</th></tr>
+        <tr><td>/8</td><td>255.0.0.0</td><td>16,777,214</td><td>Large networks (Class A)</td></tr>
+        <tr><td>/16</td><td>255.255.0.0</td><td>65,534</td><td>Medium networks (Class B)</td></tr>
+        <tr><td>/24</td><td>255.255.255.0</td><td>254</td><td>Small LAN (most common)</td></tr>
+        <tr><td>/25</td><td>255.255.255.128</td><td>126</td><td>Split /24 in half</td></tr>
+        <tr><td>/26</td><td>255.255.255.192</td><td>62</td><td>Quarter of /24</td></tr>
+        <tr><td>/27</td><td>255.255.255.224</td><td>30</td><td>Small office</td></tr>
+        <tr><td>/28</td><td>255.255.255.240</td><td>14</td><td>Small segment</td></tr>
+        <tr><td>/29</td><td>255.255.255.248</td><td>6</td><td>Very small segment</td></tr>
+        <tr><td>/30</td><td>255.255.255.252</td><td>2</td><td>Point-to-point link</td></tr>
+        <tr><td>/31</td><td>255.255.255.254</td><td>2*</td><td>P2P (RFC 3021, no bcast)</td></tr>
+        <tr><td>/32</td><td>255.255.255.255</td><td>1</td><td>Single host / loopback</td></tr>
+      </table>
+    </div>
+  `;
+}
+
+function intToIP(n) {
+  return [(n>>>24)&255,(n>>>16)&255,(n>>>8)&255,n&255].join(".");
+}
+function intToBin(n) {
+  return [(n>>>24)&255,(n>>>16)&255,(n>>>8)&255,n&255]
+    .map(b=>b.toString(2).padStart(8,"0")).join(".");
+}
+function highlight(bin, prefix) {
+  if (prefix <= 0) return `<span style="color:#EF4444">${bin}</span>`;
+  if (prefix >= 32) return `<span style="color:#22C55E">${bin}</span>`;
+  const net = bin.replace(/\./g,"").slice(0,prefix);
+  const host = bin.replace(/\./g,"").slice(prefix);
+  const reinsert = s => s.match(/.{1,8}/g).join(".");
+  return `<span style="color:#38BDF8">${reinsert(net.padEnd(prefix,""))}</span>.<span style="color:#FB923C">${reinsert(host)}</span>`.replace("..",".");
+}
+
+let calcTimer;
+function autoCalc() { clearTimeout(calcTimer); calcTimer = setTimeout(calcSubnet, 400); }
+
+function calcSubnet() {
+  const rawIP = document.getElementById("ci").value.trim();
+  let ip = rawIP, prefix;
+  if (rawIP.includes("/")) {
+    [ip, prefix] = rawIP.split("/");
+    prefix = parseInt(prefix);
+    document.getElementById("cp").value = prefix;
+  } else {
+    prefix = parseInt(document.getElementById("cp").value);
+  }
+  const errEl = document.getElementById("calc-err");
+  const resEl = document.getElementById("calc-result");
+  if (!ip) { resEl.innerHTML=""; errEl.style.display="none"; return; }
+  const parts = ip.split(".");
+  if (parts.length !== 4 || parts.some(p => isNaN(p)||p===""||+p<0||+p>255)) {
+    errEl.textContent="⚠ Invalid IP address"; errEl.style.display="block"; resEl.innerHTML=""; return;
+  }
+  if (isNaN(prefix)||prefix<0||prefix>32) {
+    errEl.textContent="⚠ Prefix must be 0–32"; errEl.style.display="block"; resEl.innerHTML=""; return;
+  }
+  errEl.style.display="none";
+  const ipInt = parts.reduce((a,b)=>(a<<8)|+b,0)>>>0;
+  const maskInt = prefix===0 ? 0 : (0xFFFFFFFF<<(32-prefix))>>>0;
+  const wildInt = (~maskInt)>>>0;
+  const netInt = (ipInt & maskInt)>>>0;
+  const bcastInt = (netInt | wildInt)>>>0;
+  const firstInt = prefix<31 ? netInt+1 : netInt;
+  const lastInt = prefix<31 ? bcastInt-1 : bcastInt;
+  const hosts = prefix>=32 ? 1 : prefix===31 ? 2 : Math.pow(2,32-prefix)-2;
+  const f = intToIP, b = intToBin;
+  const fo = intToIP(ipInt); const isIPinNet = (ipInt>=netInt && ipInt<=bcastInt);
+  const fOct = (ipInt>>>24)&255;
+  const cls = fOct<128?"A":fOct<192?"B":fOct<224?"C":fOct<240?"D – Multicast":"E – Reserved";
+  const isPriv = fOct===10||(fOct===172&&((ipInt>>>16)&255)>=16&&((ipInt>>>16)&255)<=31)||(fOct===192&&((ipInt>>>16)&255)===168);
+  const isLoopback = fOct===127;
+  const isAPIPА = fOct===169&&((ipInt>>>16)&255)===254;
+  const typeLabel = isLoopback?"🔁 Loopback":isAPIPА?"⚠️ APIPA (no DHCP!)":isPriv?"🔒 Private":"🌍 Public";
+
+  resEl.innerHTML = `
+    <div class="calc-box">
+      <div class="result-grid">
+        <div class="result-item full" style="border-color:#6366F1">
+          <div class="r-label">INPUT IP</div>
+          <div class="r-val">${f(ipInt)} /${prefix} &nbsp;<span style="font-size:11px;background:#6366F133;color:#A5B4FC;padding:2px 7px;border-radius:4px">${typeLabel}</span></div>
+          <div class="r-bin">${highlight(b(ipInt),prefix)}</div>
+        </div>
+        <div class="result-item">
+          <div class="r-label">NETWORK ADDRESS</div>
+          <div class="r-val">${f(netInt)}</div>
+          <div class="r-bin">${b(netInt)}</div>
+        </div>
+        <div class="result-item red">
+          <div class="r-label">BROADCAST</div>
+          <div class="r-val">${f(bcastInt)}</div>
+          <div class="r-bin">${b(bcastInt)}</div>
+        </div>
+        <div class="result-item green">
+          <div class="r-label">FIRST HOST</div>
+          <div class="r-val">${f(firstInt)}</div>
+        </div>
+        <div class="result-item green">
+          <div class="r-label">LAST HOST</div>
+          <div class="r-val">${f(lastInt)}</div>
+        </div>
+        <div class="result-item">
+          <div class="r-label">SUBNET MASK</div>
+          <div class="r-val">${f(maskInt)}</div>
+          <div class="r-bin">${b(maskInt)}</div>
+        </div>
+        <div class="result-item yellow">
+          <div class="r-label">WILDCARD MASK</div>
+          <div class="r-val">${f(wildInt)}</div>
+          <div class="r-bin">${b(wildInt)}</div>
+        </div>
+        <div class="result-item purple">
+          <div class="r-label">USABLE HOSTS</div>
+          <div class="r-val">${hosts.toLocaleString()}</div>
+        </div>
+        <div class="result-item">
+          <div class="r-label">IP CLASS</div>
+          <div class="r-val">${cls}</div>
+        </div>
+        <div class="result-item full" style="border-color:#334155">
+          <div class="r-label">HOST RANGE</div>
+          <div class="r-val">${f(firstInt)} – ${f(lastInt)}</div>
+        </div>
+      </div>
+    </div>`;
+}
+
+
   const swCode = `const CACHE="miki-notes-v1";self.addEventListener("install",e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll([location.href]))));self.addEventListener("fetch",e=>e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request))));`;
   const blob = new Blob([swCode], {type:"application/javascript"});
   navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(()=>{});

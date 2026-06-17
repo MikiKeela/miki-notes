@@ -1,55 +1,48 @@
 <!DOCTYPE html>
-<html lang="et">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <meta name="theme-color" content="#CC2936">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="MikroTik">
-<meta name="description" content="MikroTik RouterOS eksami spikker">
-<title>MikroTik Spikker</title>
-<link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22MikroTik%20Spikker%22%2C%22short_name%22%3A%22MikroTik%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%220D0E14%22%2C%22theme_color%22%3A%22CC2936%22%7D">
+<meta name="apple-mobile-web-app-title" content="Miki Notes">
+<meta name="description" content="Miki's IT & Networking Notes">
+<title>Miki Notes</title>
 <style>
   *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
   body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0D0E14;color:#E2E8F0;min-height:100vh;overscroll-behavior:none}
-  
-  #header{position:sticky;top:0;z-index:10;background:linear-gradient(135deg,#1a0000,#2d0505 50%,#1a0a00);border-bottom:1px solid #CC2936;padding:12px 12px 10px}
+
+  #header{position:sticky;top:0;z-index:10;background:linear-gradient(135deg,#0a0a14,#12121e 50%,#0a0a14);border-bottom:1px solid #CC2936;padding:12px 12px 10px}
   .header-top{display:flex;align-items:center;gap:8px;margin-bottom:10px}
-  .badge{background:#CC2936;border-radius:5px;padding:3px 8px;font-size:10px;font-family:monospace;font-weight:700;letter-spacing:1px;color:#fff}
-  h1{font-size:16px;font-weight:700;color:#fff}
-  .ver{margin-left:auto;font-size:10px;color:#475569;font-family:monospace}
-  
+  .badge{background:#CC2936;border-radius:5px;padding:3px 9px;font-size:11px;font-family:monospace;font-weight:700;letter-spacing:0.5px;color:#fff}
+  h1{font-size:17px;font-weight:700;color:#fff;letter-spacing:-0.3px}
+  .ver{margin-left:auto;font-size:10px;color:#334155;font-family:monospace}
+
   #search{width:100%;padding:9px 12px;border-radius:8px;border:1px solid #2A2A3A;background:#1A1A28;color:#E2E8F0;font-size:14px;outline:none;font-family:inherit}
   #search::placeholder{color:#475569}
-  
+  #search:focus{border-color:#CC2936}
+
   #cats{display:flex;gap:5px;margin-top:8px;flex-wrap:wrap}
   .cat-btn{padding:3px 9px;border-radius:20px;border:none;cursor:pointer;font-size:11px;font-weight:600;background:#1E1E30;color:#64748B;transition:all .15s;font-family:inherit}
   .cat-btn.active{color:#fff}
-  
-  #content{padding:12px 10px;max-width:900px;margin:0 auto}
-  
+
+  #content{padding:12px 10px;max-width:900px;margin:0 auto;padding-bottom:30px}
+
   .section{margin-bottom:18px}
   .sec-header{display:flex;align-items:center;gap:7px;margin-bottom:7px;padding-bottom:5px}
   .sec-title{font-size:14px;font-weight:700;color:#F1F5F9}
   .sec-count{font-size:10px;font-weight:700;padding:2px 6px;border-radius:10px}
-  
+
   .items{display:grid;gap:5px}
-  .item{background:#12131E;border:1px solid #1E2030;border-radius:6px;padding:9px 11px;display:grid;grid-template-columns:140px 1fr;gap:8px;align-items:start;cursor:pointer;transition:background .1s}
-  .item:active{background:#1A1A2E}
-  .term{font-family:monospace;font-size:11.5px;font-weight:700;word-break:break-all;line-height:1.4;filter:brightness(1.3)}
+  .item{background:#12131E;border:1px solid #1E2030;border-radius:6px;padding:9px 11px;display:grid;grid-template-columns:140px 1fr;gap:8px;align-items:start}
+  .term{font-family:monospace;font-size:11.5px;font-weight:700;word-break:break-all;line-height:1.4}
   .def{font-size:12px;color:#CBD5E1;line-height:1.5}
-  
+
   .empty{text-align:center;color:#475569;padding:40px 0;font-family:monospace}
   .empty-icon{font-size:30px;margin-bottom:8px}
-  
+
   #tip{margin-top:14px;padding:11px;background:#0F1824;border:1px solid #1E3A5F;border-radius:8px;font-family:monospace;font-size:11px;color:#64748B}
-  
-  #install-banner{display:none;position:fixed;bottom:0;left:0;right:0;background:#1A0A00;border-top:1px solid #CC2936;padding:12px 14px;z-index:20;align-items:center;gap:10px}
-  #install-banner.show{display:flex}
-  #install-btn{background:#CC2936;color:#fff;border:none;border-radius:7px;padding:8px 14px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap}
-  #install-close{background:none;border:none;color:#64748B;font-size:18px;cursor:pointer;padding:0 4px;margin-left:auto}
-  .install-text{font-size:12px;color:#94A3B8;line-height:1.4}
 
   @media(min-width:600px){.item{grid-template-columns:180px 1fr}.term{font-size:12.5px}.def{font-size:13px}}
 </style>
@@ -58,175 +51,269 @@
 
 <div id="header">
   <div class="header-top">
-    <span class="badge">MikroTik</span>
-    <h1>Eksami Spikker</h1>
-    <span class="ver">RouterOS</span>
+    <span class="badge">Miki</span>
+    <h1>Notes</h1>
+    <span class="ver">IT &amp; Networking</span>
   </div>
-  <input id="search" type="search" placeholder="🔍  Otsi terminit..." oninput="render()">
+  <input id="search" type="search" placeholder="🔍  Search terms..." oninput="render()">
   <div id="cats"></div>
 </div>
 
 <div id="content"></div>
 
-<div id="install-banner">
-  <div class="install-text">Lisa avaekraanile – töötab ka offline!</div>
-  <button id="install-btn" onclick="installApp()">📲 Lisa äpp</button>
-  <button id="install-close" onclick="hideBanner()">✕</button>
-</div>
-
 <script>
 const DATA = [
-  {id:"access",title:"🖥️ Haldus & Juurdepääs",color:"#CC2936",items:[
-    {term:"Winbox",def:"GUI haldusprogramm Windows/Linux jaoks. Ühendub MAC-aadressiga (ei vaja IP-d) või IP kaudu. Port 8291."},
-    {term:"WebFig",def:"Veebipõhine haldusliides brauseris. HTTP port 80, HTTPS port 443."},
-    {term:"CLI / Terminal",def:"Käsurearida – SSH (port 22) või Telnet (port 23) kaudu. Kõige võimsam haldusviis."},
-    {term:"API",def:"Programmeerimisliides automaatikaks. Port 8728 (plaintext), 8729 (SSL)."},
-    {term:"/system identity",def:"Routeri nimi. set name=MyRouter"},
-    {term:"Safe Mode",def:"Ctrl+X – kui ühendus katkeb, taastab eelmised seaded automaatselt. Kasulik kaugsessioonidel."},
-    {term:"New Terminal",def:"Winboxis saad avada CLI terminali: New Terminal"},
-    {term:"/user",def:"Kasutajate haldus. Vaikimisi: admin (tühi parool). Lisa alati parool!"},
+  {id:"osi",title:"📚 OSI Model",color:"#7C3AED",items:[
+    {term:"Layer 1 – Physical",def:"Bits over cable/radio. Devices: Hub, Repeater, Cable. Examples: Ethernet cable, Wi-Fi signal"},
+    {term:"Layer 2 – Data Link",def:"Frames, MAC addresses. Devices: Switch, Bridge. Protocols: Ethernet, PPP, ARP"},
+    {term:"Layer 3 – Network",def:"Packets, IP addresses, routing. Devices: Router. Protocols: IP, ICMP, OSPF, BGP"},
+    {term:"Layer 4 – Transport",def:"Segments. TCP (reliable) vs UDP (fast). Ports live here. Flow control, error recovery."},
+    {term:"Layer 5 – Session",def:"Opens/closes/manages sessions between apps. Examples: NetBIOS, RPC, SQL sessions"},
+    {term:"Layer 6 – Presentation",def:"Data formatting, encryption, compression. Examples: SSL/TLS, JPEG, ASCII, Unicode"},
+    {term:"Layer 7 – Application",def:"User-facing protocols. Examples: HTTP, FTP, DNS, SMTP, SSH, Telnet"},
+    {term:"Mnemonic (top→down)",def:"All People Seem To Need Data Processing"},
+    {term:"Mnemonic (bottom→up)",def:"Please Do Not Throw Sausage Pizza Away"},
+    {term:"PDU names",def:"L7-5: Data | L4: Segment | L3: Packet | L2: Frame | L1: Bit"},
+    {term:"Encapsulation",def:"Each layer adds its own header as data travels DOWN the stack (sender side)"},
+    {term:"Decapsulation",def:"Each layer removes its header as data travels UP the stack (receiver side)"},
   ]},
-  {id:"ip",title:"🌐 IP Aadressimine",color:"#0077B6",items:[
-    {term:"/ip address",def:"IP aadresside haldus liidestel. add address=192.168.1.1/24 interface=ether1"},
-    {term:"CIDR notatsioon",def:"/24 = 255.255.255.0 | /16 = 255.255.0.0 | /8 = 255.0.0.0 | /30 = point-to-point"},
-    {term:"/ip route",def:"Marsruutimistabel. Vaikemarsruut: add dst-address=0.0.0.0/0 gateway=x.x.x.x"},
-    {term:"Default route",def:"0.0.0.0/0 – kõik liiklus mis ei sobi teistega, läheb siia (gateway)"},
-    {term:"dst-address",def:"Sihtkoha IP/võrk marsruudis"},
-    {term:"gateway",def:"Järgmine hüpe (next-hop) marsruudis"},
-    {term:"/ip neighbor",def:"Näitab naaberseadmeid (MikroTik Neighbor Discovery – MNDP)"},
-    {term:"Loopback",def:"127.0.0.1 – kohalik silmus, alati üleval"},
+  {id:"tcpip",title:"🌐 TCP/IP & Protocols",color:"#0077B6",items:[
+    {term:"TCP",def:"Transmission Control Protocol. Reliable, ordered, connection-oriented. 3-way handshake (SYN→SYN-ACK→ACK). Used: HTTP, FTP, SSH"},
+    {term:"UDP",def:"User Datagram Protocol. Fast, connectionless, no guarantee. Used: DNS, DHCP, VoIP, video streaming, gaming"},
+    {term:"3-way handshake",def:"SYN → SYN-ACK → ACK. Establishes a TCP connection before data transfer."},
+    {term:"IP",def:"Internet Protocol. Connectionless, best-effort delivery of packets. IPv4 (32-bit) or IPv6 (128-bit)"},
+    {term:"ICMP",def:"Internet Control Message Protocol. Used for ping and traceroute. Not for data transfer."},
+    {term:"ARP",def:"Address Resolution Protocol. Resolves IP → MAC address. Broadcasts on local network."},
+    {term:"DNS",def:"Domain Name System. Resolves hostnames → IP addresses. Port 53 UDP/TCP."},
+    {term:"HTTP",def:"HyperText Transfer Protocol. Web traffic. Port 80 (clear text)."},
+    {term:"HTTPS",def:"HTTP Secure. Encrypted with TLS. Port 443."},
+    {term:"FTP",def:"File Transfer Protocol. Port 21 (control), 20 (data). Not encrypted!"},
+    {term:"SFTP/SCP",def:"Secure file transfer over SSH. Port 22."},
+    {term:"SSH",def:"Secure Shell. Encrypted remote CLI access. Port 22. Replaces Telnet."},
+    {term:"Telnet",def:"Unencrypted remote CLI access. Port 23. Avoid – plaintext!"},
+    {term:"SMTP",def:"Simple Mail Transfer Protocol. Sending email. Port 25 (or 587)."},
+    {term:"SNMP",def:"Simple Network Management Protocol. Monitors network devices. Port 161 UDP."},
+    {term:"NTP",def:"Network Time Protocol. Syncs clocks. Port 123 UDP."},
   ]},
-  {id:"dhcp",title:"📋 DHCP",color:"#2D6A4F",items:[
-    {term:"DHCP Server",def:"Jagab IP aadresse klientidele automaatselt. /ip dhcp-server"},
-    {term:"DHCP Client",def:"Router ise saab ISP-lt IP aadressi. add interface=ether1 disabled=no"},
-    {term:"IP Pool",def:"IP aadresside vahemik DHCP jagamiseks. ranges=192.168.1.100-192.168.1.200"},
-    {term:"Lease",def:"Renditud IP aadress kliendile. Lease time = kui kaua kehtib."},
-    {term:"DORA protsess",def:"Discover → Offer → Request → Acknowledge. DHCP leping 4 sammuga."},
-    {term:"dns-server",def:"DHCP jagab ka DNS serveri aadressi klientidele"},
-    {term:"gateway",def:"DHCP jagab klientidele ka default gateway aadressi"},
-    {term:"/ip dhcp-server network",def:"Võrgu seaded DHCP serverile (gateway, DNS, subnet)"},
+  {id:"subnet",title:"📐 Subnetting",color:"#0A7E8C",items:[
+    {term:"/8  (Class A)",def:"255.0.0.0 | 16,777,214 hosts | 1st octet fixed"},
+    {term:"/16 (Class B)",def:"255.255.0.0 | 65,534 hosts | First 2 octets fixed"},
+    {term:"/24 (Class C)",def:"255.255.255.0 | 254 hosts | First 3 octets fixed"},
+    {term:"/25",def:"255.255.255.128 | 126 hosts | 2 subnets from /24"},
+    {term:"/26",def:"255.255.255.192 | 62 hosts | 4 subnets from /24"},
+    {term:"/27",def:"255.255.255.224 | 30 hosts | 8 subnets from /24"},
+    {term:"/28",def:"255.255.255.240 | 14 hosts | 16 subnets from /24"},
+    {term:"/29",def:"255.255.255.248 | 6 hosts | 32 subnets from /24"},
+    {term:"/30",def:"255.255.255.252 | 2 hosts | Point-to-point links"},
+    {term:"/32",def:"255.255.255.255 | 1 host | Single host route / loopback"},
+    {term:"Hosts formula",def:"2^(32-prefix) − 2. Minus 2 = network addr + broadcast addr"},
+    {term:"Private ranges",def:"10.0.0.0/8 | 172.16.0.0/12 | 192.168.0.0/16 — not routed on internet"},
+    {term:"Loopback",def:"127.0.0.0/8 — always local, never sent to network"},
+    {term:"APIPA",def:"169.254.0.0/16 — auto-assigned when DHCP fails (link-local)"},
+    {term:"Broadcast",def:"Last address in subnet. Sent to all hosts. (/24 → .255)"},
+    {term:"Network addr",def:"First address in subnet. Not assignable. (/24 → .0)"},
   ]},
-  {id:"nat",title:"🔁 NAT",color:"#E07B39",items:[
-    {term:"NAT",def:"Network Address Translation – muudab IP aadresse pakettides. Lubab LAN-il internetti pääseda."},
-    {term:"srcnat",def:"Source NAT – muudab lähte-IP-d. LAN → Internet. Ahel: srcnat."},
-    {term:"dstnat",def:"Destination NAT – muudab siht-IP-d. Port forwarding. Ahel: dstnat."},
-    {term:"Masquerade",def:"Lihtne srcnat, kasutab automaatselt väljuva liidese IP-d. Hea dünaamilise IP korral."},
-    {term:"src-address",def:"Lähte-IP aadress NAT/tulemüüri reeglis"},
-    {term:"out-interface",def:"Väljuv liides NAT reeglis (tavaliselt WAN/ether1)"},
-    {term:"to-addresses",def:"NAT sihtkoha aadress (dstnat: sisevõrgu server)"},
-    {term:"to-ports",def:"Port mida kasutatakse dstnat puhul (port forwarding)"},
+  {id:"access",title:"🖥️ MikroTik – Access",color:"#CC2936",items:[
+    {term:"Winbox",def:"GUI management tool for Windows/Linux. Connects via MAC address (no IP needed) or IP. Port 8291."},
+    {term:"WebFig",def:"Web-based management interface in browser. HTTP port 80, HTTPS port 443."},
+    {term:"CLI / Terminal",def:"Command line – via SSH (port 22) or Telnet (port 23). Most powerful method."},
+    {term:"API",def:"Programming interface for automation. Port 8728 (plain), 8729 (SSL)."},
+    {term:"/system identity",def:"Router name. set name=MyRouter"},
+    {term:"Safe Mode",def:"Ctrl+X — if connection drops, settings revert automatically. Use on remote sessions!"},
+    {term:"/user",def:"User management. Default: admin (no password). Always set a password!"},
+    {term:"? (question mark)",def:"In CLI: shows all available commands and parameters at current level. Very useful!"},
+    {term:"Tab",def:"Autocomplete in CLI"},
+    {term:"/export",def:"Exports config as readable text. Save as backup!"},
+    {term:"/system backup save",def:"Saves binary backup of full config"},
   ]},
-  {id:"firewall",title:"🔥 Firewall",color:"#9B2335",items:[
-    {term:"/ip firewall filter",def:"Tulemüüri filtreerimisreeglid. Kolm ahelat: input, output, forward."},
-    {term:"Chain: input",def:"Liiklus ROUTERISSE ENDALE suunatud (nt SSH, Winbox, ping routerile)"},
-    {term:"Chain: output",def:"Liiklus ROUTERIST VÄLJA (routeri enda genereeritud)"},
-    {term:"Chain: forward",def:"Liiklus LÄBI ROUTERI (LAN ↔ Internet)"},
-    {term:"accept",def:"Luba pakett läbi"},
-    {term:"drop",def:"Blokeeri pakett – saatjale vastust ei saadeta"},
-    {term:"reject",def:"Blokeeri pakett – saatjale saadetakse ICMP vastus"},
-    {term:"log",def:"Logib paketi, aga ei blokeeri ega luba"},
-    {term:"established",def:"Juba loodud ühenduse paketid – lubada alati"},
-    {term:"related",def:"Ühendusega seotud paketid (nt FTP andmekanalid)"},
-    {term:"new",def:"Uue ühenduse esimene pakett"},
-    {term:"invalid",def:"Vigased/tundmatud paketid – blokeeri alati"},
-    {term:"dst-port",def:"Sihtport filter reeglis"},
-    {term:"protocol",def:"tcp / udp / icmp / ospf jne"},
+  {id:"ip",title:"🌍 MikroTik – IP & Routing",color:"#0077B6",items:[
+    {term:"/ip address",def:"IP address management on interfaces. add address=192.168.1.1/24 interface=ether1"},
+    {term:"/ip route",def:"Routing table. Static default route: add dst-address=0.0.0.0/0 gateway=x.x.x.x"},
+    {term:"Default route",def:"0.0.0.0/0 — all traffic not matching other routes goes here (to gateway/ISP)"},
+    {term:"dst-address",def:"Destination IP/network in a route"},
+    {term:"gateway",def:"Next hop in a route"},
+    {term:"Static route",def:"Manually added route. Simple but doesn't adapt to changes automatically."},
+    {term:"OSPF",def:"Open Shortest Path First — dynamic interior routing, link-state algorithm"},
+    {term:"BGP",def:"Border Gateway Protocol — internet routing, between ISPs"},
+    {term:"Admin Distance",def:"Preference between protocols. Lower = preferred. Static=1, OSPF=110, BGP=200"},
+    {term:"/ip neighbor",def:"Shows neighboring devices (MikroTik Neighbor Discovery – MNDP)"},
   ]},
-  {id:"bridge",title:"🔀 Bridge & VLAN",color:"#5E548E",items:[
-    {term:"Bridge",def:"Ühendab mitu liidest Layer 2 tasemel – töötab nagu switch. /interface bridge"},
-    {term:"Bridge port",def:"Liidesed mis kuuluvad bridge'i. add bridge=bridge1 interface=ether2"},
-    {term:"VLAN",def:"Virtual LAN – loogiline võrgu eraldatus füüsilises võrgus. /interface vlan"},
-    {term:"VLAN ID",def:"Numbriline tunnus 1–4094. 1 on vaikimisi, 4094 on maksimaalne."},
-    {term:"Tagged (trunk)",def:"Paneb VLAN sildi paketile – switch-switch ühendustel"},
-    {term:"Untagged (access)",def:"Ilma VLAN sildita – switch-seade ühendustel (nt PC)"},
-    {term:"MAC address table",def:"Bridge õpib, millised MAC aadressid on millises pordis."},
-    {term:"Flooding",def:"Tundmatu sihtkoha korral saadetakse KÕIKIDESSE portidesse (v.a tulnud port)"},
+  {id:"dhcp",title:"📋 MikroTik – DHCP",color:"#2D6A4F",items:[
+    {term:"DHCP Server",def:"Automatically assigns IP addresses to clients. /ip dhcp-server"},
+    {term:"DHCP Client",def:"Router gets IP from ISP automatically. add interface=ether1 disabled=no"},
+    {term:"IP Pool",def:"Range of IPs for DHCP to hand out. ranges=192.168.1.100-192.168.1.200"},
+    {term:"Lease",def:"Assigned IP address for a client. Lease time = how long it's valid."},
+    {term:"DORA",def:"Discover → Offer → Request → Acknowledge. The 4-step DHCP process."},
+    {term:"/ip dhcp-server network",def:"Network settings for DHCP (gateway, DNS, subnet)"},
+    {term:"Static lease",def:"Always give same IP to a specific MAC address (IP reservation)"},
   ]},
-  {id:"wireless",title:"📶 Wireless",color:"#1B7A6E",items:[
-    {term:"/interface wireless",def:"WiFi liideste haldus. Vaikimisi wlan1."},
-    {term:"SSID",def:"Võrgu nimi (Service Set Identifier) – see mida näed WiFi nimekirjas"},
-    {term:"Mode: ap-bridge",def:"Access Point režiim – jagab WiFi võrku (kõige tavalisem)"},
-    {term:"Mode: station",def:"Klient režiim – ühendub teise AP-ga"},
-    {term:"Mode: bridge",def:"Punkt-punkt ühendus kahe MikroTiku vahel"},
-    {term:"Band",def:"2.4GHz (pikk ulatus, aeglasem) vs 5GHz (lühem ulatus, kiirem)"},
-    {term:"Security profile",def:"WPA2 turvaseaded. /interface wireless security-profiles"},
-    {term:"WPA2-PSK",def:"WiFi turvalisus parooliga – praegune standard"},
-    {term:"Channel width",def:"20MHz (stabiilne) vs 40/80MHz (kiirem, rohkem häireid)"},
-    {term:"Frequency",def:"Konkreetne sagedus/kanal (nt 2412 = kanal 1, 5180 = kanal 36)"},
+  {id:"nat",title:"🔁 MikroTik – NAT",color:"#E07B39",items:[
+    {term:"NAT",def:"Network Address Translation — changes IP addresses in packets. Allows LAN to reach internet."},
+    {term:"srcnat",def:"Source NAT — changes source IP. LAN → Internet. Chain: srcnat."},
+    {term:"dstnat",def:"Destination NAT — changes destination IP. Port forwarding. Chain: dstnat."},
+    {term:"Masquerade",def:"Simple srcnat that auto-uses the outgoing interface IP. Best for dynamic IPs. action=masquerade"},
+    {term:"out-interface",def:"Outgoing interface in NAT rule (usually WAN/ether1)"},
+    {term:"to-addresses",def:"Target address in dstnat (internal server IP)"},
+    {term:"to-ports",def:"Target port in dstnat (port forwarding)"},
   ]},
-  {id:"routing",title:"🗺️ Marsruutimine",color:"#3A6186",items:[
-    {term:"Static route",def:"Käsitsi lisatud marsruut. Lihtsam, aga ei kohane muutustega automaatselt."},
-    {term:"Dynamic routing",def:"Protokollid mis õpivad marsruute automaatselt: OSPF, BGP, RIP"},
-    {term:"OSPF",def:"Open Shortest Path First – siseruutimine, link-state algoritm"},
-    {term:"BGP",def:"Border Gateway Protocol – internetimarsruutimine, ISP-de vahel"},
-    {term:"RIP",def:"Routing Information Protocol – vanem, hop count meetrika (max 15 hüpet)"},
-    {term:"Admin Distance",def:"Eelistus protokollide vahel. Väiksem = eelistatavam. Static=1, OSPF=110, BGP=200"},
-    {term:"Metric",def:"Marsruudi 'kulu' – väiksem on parem"},
-    {term:"Next-hop",def:"Järgmine ruuter kuhu pakett saadetakse"},
+  {id:"firewall",title:"🔥 MikroTik – Firewall",color:"#9B2335",items:[
+    {term:"/ip firewall filter",def:"Firewall filtering rules. Three chains: input, output, forward."},
+    {term:"Chain: input",def:"Traffic TO THE ROUTER ITSELF (e.g. SSH, Winbox, ping to router)"},
+    {term:"Chain: output",def:"Traffic FROM THE ROUTER (generated by router itself)"},
+    {term:"Chain: forward",def:"Traffic THROUGH THE ROUTER (LAN ↔ Internet)"},
+    {term:"accept",def:"Allow the packet through"},
+    {term:"drop",def:"Block packet silently — no response to sender"},
+    {term:"reject",def:"Block packet — sender gets ICMP unreachable reply"},
+    {term:"log",def:"Log the packet, but don't block or allow (usually combined with another action)"},
+    {term:"established",def:"Packets belonging to an already-established connection — always allow"},
+    {term:"related",def:"Packets related to an existing connection (e.g. FTP data channel)"},
+    {term:"new",def:"First packet of a new connection"},
+    {term:"invalid",def:"Broken/unknown packets — always drop"},
+    {term:"dst-port",def:"Destination port in filter rule"},
+    {term:"protocol",def:"tcp / udp / icmp / ospf etc."},
   ]},
-  {id:"vpn",title:"🔒 VPN & Tunnelid",color:"#7B5E3A",items:[
-    {term:"PPPoE",def:"Point-to-Point Protocol over Ethernet – xDSL internetiühendus. /interface pppoe-client"},
-    {term:"L2TP",def:"Layer 2 Tunneling Protocol – VPN, sageli koos IPSec-iga"},
-    {term:"SSTP",def:"Secure Socket Tunneling Protocol – Microsofti VPN, töötab HTTPS pordil 443"},
-    {term:"OpenVPN",def:"Avatud lähtekoodiga VPN. Port tavaliselt 1194 UDP."},
-    {term:"IPSec",def:"Krüpteerib ja autentib IP pakette. Sageli L2TP kaaslane."},
-    {term:"GRE Tunnel",def:"Generic Routing Encapsulation – kapseldab protokolle, ise ei krüpteeri"},
-    {term:"EoIP",def:"Ethernet over IP – MikroTiku oma tunnel, ühendab ethernet-segmente üle IP"},
+  {id:"bridge",title:"🔀 MikroTik – Bridge & VLAN",color:"#5E548E",items:[
+    {term:"Bridge",def:"Connects multiple interfaces at Layer 2 — acts like a switch. /interface bridge"},
+    {term:"Bridge port",def:"Interfaces that belong to the bridge. add bridge=bridge1 interface=ether2"},
+    {term:"VLAN",def:"Virtual LAN — logical network separation within physical network. /interface vlan"},
+    {term:"VLAN ID",def:"Numeric tag 1–4094. 1 is default, 4094 is maximum."},
+    {term:"Tagged (trunk)",def:"Adds VLAN tag to packets — used on switch-to-switch links"},
+    {term:"Untagged (access)",def:"No VLAN tag — used on switch-to-device links (e.g. PC)"},
+    {term:"MAC address table",def:"Bridge learns which MACs are on which port. Known = direct. Unknown = flood."},
+    {term:"Flooding",def:"Unknown destination → packet sent to ALL ports except the one it came in on"},
   ]},
-  {id:"qos",title:"⚡ QoS & Ribalaius",color:"#B5451B",items:[
-    {term:"/queue simple",def:"Lihtne ribalaiuse piiramine. add target=192.168.1.10 max-limit=10M/2M"},
-    {term:"/queue tree",def:"Keeruline järjekord koos mangle reeglitega – täpsem kontroll"},
-    {term:"max-limit",def:"Maksimaalne ribalaius (download/upload). Nt 10M/2M = 10Mbit alla, 2Mbit üles"},
-    {term:"burst-limit",def:"Ajutine kiiruse tõus lühiajaliselt üle max-limit"},
-    {term:"Mangle",def:"/ip firewall mangle – märgib pakette (mark) QoS jaoks"},
-    {term:"PCQ",def:"Per Connection Queue – jagab ribalaiuse võrdselt kasutajate vahel"},
-    {term:"priority",def:"Paketi prioriteet 1-8 (1=kõrgeim). Kõrge prioriteet = esimesena saadetud"},
+  {id:"wireless",title:"📶 MikroTik – Wireless",color:"#1B7A6E",items:[
+    {term:"/interface wireless",def:"Wireless interface management. Default: wlan1."},
+    {term:"SSID",def:"Network name (Service Set Identifier) — what you see in the Wi-Fi list"},
+    {term:"Mode: ap-bridge",def:"Access Point mode — broadcasts Wi-Fi network (most common)"},
+    {term:"Mode: station",def:"Client mode — connects to another AP"},
+    {term:"Mode: bridge",def:"Point-to-point link between two MikroTik devices"},
+    {term:"Band",def:"2.4GHz (longer range, slower) vs 5GHz (shorter range, faster)"},
+    {term:"Security profile",def:"WPA2 settings. /interface wireless security-profiles"},
+    {term:"WPA2-PSK",def:"Wi-Fi security with password — current standard"},
+    {term:"Channel width",def:"20MHz (stable) vs 40/80MHz (faster, more interference)"},
   ]},
-  {id:"dns",title:"📡 DNS & Süsteem",color:"#0A7E8C",items:[
-    {term:"/ip dns",def:"DNS seaded. set servers=8.8.8.8,1.1.1.1 allow-remote-requests=yes"},
-    {term:"allow-remote-requests",def:"Lubab teistel kasutada ruuterit DNS serverina (LAN klientidele)"},
-    {term:"/system ntp client",def:"NTP aeg. set enabled=yes servers=pool.ntp.org"},
-    {term:"/system clock",def:"Kella ja ajavööndi seaded"},
-    {term:"/log print",def:"Näitab süsteemi loge. Kasulik vigade otsimisel."},
-    {term:"/system resource print",def:"CPU, RAM, uptime, RouterOS versioon"},
-    {term:"/system routerboard print",def:"Riistvara info, firmware versioon"},
-    {term:"/ip service",def:"Teenuste haldus. Turva pärast keela mittevajalikud!"},
-  ]},
-  {id:"commands",title:"⌨️ CLI Käsud",color:"#1E3A5F",items:[
-    {term:"/ping x.x.x.x",def:"Ping – kontrolli ühendust IP aadressiga"},
-    {term:"/tool traceroute",def:"Traceroute – näita marsruuti sihtkohani"},
-    {term:"/interface print",def:"Kõik liidesed ja nende olek (R=running, D=disabled)"},
-    {term:"/ip address print",def:"Kõik IP aadressid liidestel"},
-    {term:"/ip route print",def:"Marsruutimistabel"},
-    {term:"/ip arp print",def:"ARP tabel – IP↔MAC seosed"},
-    {term:"/ip firewall filter print",def:"Tulemüüri reeglid numbrite ja statistikaga"},
-    {term:"? (küsimärk)",def:"Näitab saadaolevaid käske ja parameetreid igal tasandil – väga kasulik!"},
-    {term:"Tab",def:"Automaatlõpetamine CLI-s"},
-    {term:"/export",def:"Ekspordib konfiguratsiooni tekstina. Salvesta backup!"},
-    {term:"/system backup save",def:"Salvestab binaarset backupi"},
-  ]},
-  {id:"ports",title:"🔌 Vaikimisi Pordid",color:"#2C3E50",items:[
-    {term:"Winbox",def:"TCP 8291"},
+  {id:"ports",title:"🔌 Common Ports",color:"#2C3E50",items:[
+    {term:"FTP",def:"TCP 20 (data), 21 (control)"},
     {term:"SSH",def:"TCP 22"},
-    {term:"Telnet",def:"TCP 23 (ebaturvaline!)"},
-    {term:"HTTP (WebFig)",def:"TCP 80"},
+    {term:"Telnet",def:"TCP 23 (unencrypted!)"},
+    {term:"SMTP",def:"TCP 25 / 587"},
+    {term:"DNS",def:"UDP/TCP 53"},
+    {term:"HTTP",def:"TCP 80"},
     {term:"HTTPS",def:"TCP 443"},
-    {term:"FTP",def:"TCP 21"},
-    {term:"API",def:"TCP 8728"},
-    {term:"API-SSL",def:"TCP 8729"},
+    {term:"DHCP Server",def:"UDP 67"},
+    {term:"DHCP Client",def:"UDP 68"},
+    {term:"NTP",def:"UDP 123"},
+    {term:"SNMP",def:"UDP 161"},
+    {term:"RDP",def:"TCP 3389"},
+    {term:"Winbox",def:"TCP 8291"},
+    {term:"API",def:"TCP 8728 / 8729 (SSL)"},
     {term:"OpenVPN",def:"UDP/TCP 1194"},
     {term:"L2TP",def:"UDP 1701"},
     {term:"PPTP",def:"TCP 1723"},
+    {term:"BGP",def:"TCP 179"},
+    {term:"OSPF",def:"IP Protocol 89 (no port)"},
   ]},
-  {id:"devices",title:"🖧 Seadmed & Terminid",color:"#4A4E69",items:[
-    {term:"RouterOS",def:"MikroTiku operatsioonisüsteem. Töötab kõigil MikroTiku seadmetel."},
-    {term:"RouterBoard (RB)",def:"MikroTiku oma riistvara (nt RB951Ui-2HnD, RB750Gr3)"},
-    {term:"CHR",def:"Cloud Hosted Router – RouterOS virtuaalmasinana (VMware, VirtualBox, cloud)"},
-    {term:"CCR",def:"Cloud Core Router – võimsad ruuterid ISP/enterprise kasutuseks"},
-    {term:"CRS",def:"Cloud Router Switch – kombineeritud ruuter ja switch"},
-    {term:"hAP",def:"Home Access Point – koduruuterid (hAP ac², hAP ax³)"},
-    {term:"wAP",def:"Wireless Access Point – välised/seinapeal WiFi AP-d"},
-    {term:"MTCNA",def:"MikroTik Certified Network Associate – algtaseme sertifikaat"},
+  {id:"kali",title:"🐉 Kali Linux Commands",color:"#1A1A2E",items:[
+    {term:"ifconfig",def:"Show/configure network interfaces (older). ifconfig eth0 192.168.1.10 netmask 255.255.255.0"},
+    {term:"ip addr",def:"Show IP addresses (modern). ip addr show / ip addr add 192.168.1.10/24 dev eth0"},
+    {term:"ip link",def:"Show/manage interfaces. ip link set eth0 up / down"},
+    {term:"ip route",def:"Show/manage routes. ip route add default via 192.168.1.1"},
+    {term:"ping",def:"Test connectivity. ping 8.8.8.8 / ping -c 4 google.com"},
+    {term:"traceroute",def:"Show path to destination. traceroute 8.8.8.8"},
+    {term:"nmap",def:"Network scanner. nmap -sV 192.168.1.0/24 (scan network)"},
+    {term:"netstat",def:"Network connections & ports. netstat -tulnp (show listening ports)"},
+    {term:"ss",def:"Modern replacement for netstat. ss -tulnp"},
+    {term:"arp -a",def:"Show ARP table (IP↔MAC mappings)"},
+    {term:"iwconfig",def:"Configure wireless interfaces (older). Check SSID, signal"},
+    {term:"iwlist scan",def:"Scan for nearby Wi-Fi networks"},
+    {term:"nmcli",def:"NetworkManager CLI. nmcli dev status / nmcli con show"},
+    {term:"dhclient",def:"Request IP from DHCP server. dhclient eth0"},
+    {term:"cat /etc/resolv.conf",def:"Show current DNS server settings"},
+    {term:"wget / curl",def:"Download files or test HTTP. curl -I https://example.com (headers only)"},
+    {term:"chmod",def:"Change file permissions. chmod +x script.sh (make executable)"},
+    {term:"sudo",def:"Run command as root/superuser"},
+  ]},
+  {id:"security",title:"🔐 Network Security",color:"#B5451B",items:[
+    {term:"CIA Triad",def:"Confidentiality (only right people see data), Integrity (data not tampered), Availability (data accessible when needed)"},
+    {term:"Firewall",def:"Filters traffic based on rules. Stateful (tracks connections) vs Stateless (just rules)"},
+    {term:"Stateful firewall",def:"Tracks connection state. Knows if packet belongs to established session. Smarter."},
+    {term:"Stateless firewall",def:"Checks each packet independently against rules. Faster but less intelligent."},
+    {term:"IDS",def:"Intrusion Detection System — monitors and alerts on suspicious traffic. Passive."},
+    {term:"IPS",def:"Intrusion Prevention System — monitors AND blocks suspicious traffic. Active."},
+    {term:"DMZ",def:"Demilitarized Zone — network segment for public-facing servers (web, mail). Between internet and LAN."},
+    {term:"VPN",def:"Virtual Private Network — encrypted tunnel over public internet. Remote access or site-to-site."},
+    {term:"WPA2",def:"Wi-Fi Protected Access 2. Current standard. Uses AES encryption. Better than WEP/WPA."},
+    {term:"WEP",def:"Wired Equivalent Privacy. Very old, easily cracked. Don't use!"},
+    {term:"Evil Twin",def:"Rogue AP with same SSID as legit network — used in Wi-Fi attacks. Clients connect unknowingly."},
+    {term:"Rogue AP",def:"Unauthorized access point on a network. Security risk."},
+    {term:"MAC filtering",def:"Allow/deny devices by MAC address. Weak security — MACs can be spoofed."},
+    {term:"MITM",def:"Man-in-the-Middle attack — attacker intercepts communication between two parties"},
+    {term:"DoS / DDoS",def:"Denial of Service / Distributed DoS — overwhelm a target to make it unavailable"},
+    {term:"Phishing",def:"Tricking users into revealing credentials via fake emails/websites"},
+  ]},
+  {id:"ipaddr",title:"🏠 Public vs Private IP",color:"#0EA5E9",items:[
+    {term:"Private IP",def:"Used inside local networks (LAN). Not routable on the internet. Assigned by router via DHCP or manually."},
+    {term:"Public IP",def:"Unique address on the internet. Assigned by ISP. Routable globally. One per network (with NAT)."},
+    {term:"10.0.0.0/8",def:"Private range. 10.0.0.0 – 10.255.255.255. ~16.7 million addresses. Often used in large networks."},
+    {term:"172.16.0.0/12",def:"Private range. 172.16.0.0 – 172.31.255.255. ~1 million addresses. Less common."},
+    {term:"192.168.0.0/16",def:"Private range. 192.168.0.0 – 192.168.255.255. ~65k addresses. Most common in homes/offices."},
+    {term:"127.0.0.0/8",def:"Loopback. 127.0.0.1 = localhost. Traffic never leaves the device. Used for testing."},
+    {term:"169.254.0.0/16",def:"APIPA (link-local). Auto-assigned when DHCP fails. 169.254.x.x means no DHCP found!"},
+    {term:"0.0.0.0",def:"Default route / unspecified address. In routing: matches everything. In DHCP: 'I have no IP yet'."},
+    {term:"255.255.255.255",def:"Limited broadcast. Sent to all devices on local network. Not forwarded by routers."},
+    {term:"NAT",def:"Network Address Translation — lets many devices share one public IP. Private IPs → Public IP on the way out."},
+    {term:"Static IP",def:"Manually configured, never changes. Used for servers, routers, printers."},
+    {term:"Dynamic IP",def:"Assigned by DHCP, can change. Used for regular clients (PCs, phones)."},
+    {term:"IPv4",def:"32-bit address. Written as 4 octets: 192.168.1.1. ~4.3 billion addresses (running out!)."},
+    {term:"IPv6",def:"128-bit address. Written in hex: 2001:db8::1. ~340 undecillion addresses. Solves IPv4 exhaustion."},
+    {term:"::1",def:"IPv6 loopback (= 127.0.0.1 in IPv4)"},
+    {term:"fe80::/10",def:"IPv6 link-local. Auto-configured on every interface. Not routed. Similar to 169.254.x.x."},
+    {term:"Multicast",def:"224.0.0.0/4 — sent to a group of interested devices. Used by OSPF (224.0.0.5), mDNS (224.0.0.251)."},
+    {term:"ISP",def:"Internet Service Provider — gives you your public IP and internet access. e.g. Telia, Elisa, STV."},
+  ]},
+  {id:"cables",title:"🔌 Cables & Connectors",color:"#D4A017",items:[
+    {term:"Cat5",def:"Up to 100 Mbps, 100m. Supports Fast Ethernet (100BASE-TX). Mostly obsolete now."},
+    {term:"Cat5e",def:"Up to 1 Gbps, 100m. 'Enhanced' Cat5 — reduced crosstalk. Most common in homes."},
+    {term:"Cat6",def:"Up to 1 Gbps (100m) or 10 Gbps (55m). Better shielding than Cat5e. Common in offices."},
+    {term:"Cat6a",def:"Up to 10 Gbps, 100m. 'Augmented' Cat6. Thicker, stiffer cable. Used in data centers."},
+    {term:"Cat7",def:"Up to 10 Gbps, 100m. Fully shielded (S/FTP). Uses GG45 or TERA connector."},
+    {term:"Cat8",def:"Up to 40 Gbps, 30m. For data centers and server rooms. Very thick and stiff."},
+    {term:"UTP",def:"Unshielded Twisted Pair — most common, flexible, cheap. No shielding against interference."},
+    {term:"STP",def:"Shielded Twisted Pair — foil/braid shield around pairs. Better in high-interference environments."},
+    {term:"FTP",def:"Foiled Twisted Pair — foil around all pairs together. Also called F/UTP."},
+    {term:"RJ45",def:"Standard 8-pin connector for Ethernet cables. Used on Cat5/5e/6/6a."},
+    {term:"Straight-through",def:"Same pin order on both ends (T568B–T568B). PC → Switch, Router → Switch."},
+    {term:"Crossover",def:"Crossed TX/RX pairs (T568A–T568B). PC → PC, Switch → Switch (old). Modern switches have Auto-MDI-X."},
+    {term:"Auto-MDI-X",def:"Feature on modern switches/NICs that automatically detects and corrects cable type. No crossover needed."},
+    {term:"T568A / T568B",def:"Two wiring standards for RJ45. T568B most common (white-orange, orange, white-green, blue, white-blue, green, white-brown, brown)."},
+    {term:"Fiber optic",def:"Uses light pulses instead of electrical signals. Immune to EMI, very long distances, very fast."},
+    {term:"Single-mode fiber",def:"SMF — thin core (9µm), laser light, very long distance (up to 100km+). More expensive. Yellow jacket."},
+    {term:"Multi-mode fiber",def:"MMF — thicker core (50/62.5µm), LED light, shorter distance (up to ~550m at 10Gbps). Orange/aqua jacket."},
+    {term:"LC connector",def:"Small form-factor fiber connector. Most common in modern equipment and SFP modules."},
+    {term:"SC connector",def:"Larger push-pull fiber connector. Common in older equipment and patch panels."},
+    {term:"ST connector",def:"Bayonet-style fiber connector (twist-lock). Older networks."},
+    {term:"SFP",def:"Small Form-factor Pluggable — hot-swappable module for fiber or copper. 1 Gbps. Goes into SFP port."},
+    {term:"SFP+",def:"Enhanced SFP — supports 10 Gbps. Common in enterprise switches and routers."},
+    {term:"Coaxial",def:"Central copper wire + outer shield. Used for cable TV, internet (DOCSIS). BNC or F-type connector."},
+    {term:"PoE",def:"Power over Ethernet — delivers electrical power over Cat5e/6 cable. IEEE 802.3af (15.4W) or 802.3at (30W)."},
+    {term:"Max cable length",def:"Copper Ethernet (Cat5e–Cat8): 100m. After 100m signal degrades — use switch or repeater."},
+    {term:"Patch cable",def:"Short, pre-made cable used to connect devices in a rack or to a patch panel. Usually Cat6."},
+    {term:"Rollover cable",def:"Console cable — connects PC to Cisco/MikroTik console port (RJ45 to DB9 or USB). Used for initial setup."},
+  ]},
+  {id:"commands",title:"⌨️ MikroTik CLI Quick Ref",color:"#334155",items:[
+    {term:"/ping x.x.x.x",def:"Ping — test connectivity to IP address"},
+    {term:"/tool traceroute",def:"Traceroute — show path to destination"},
+    {term:"/interface print",def:"All interfaces and their status (R=running, D=disabled)"},
+    {term:"/ip address print",def:"All IP addresses on interfaces"},
+    {term:"/ip route print",def:"Routing table"},
+    {term:"/ip arp print",def:"ARP table — IP↔MAC mappings"},
+    {term:"/ip dhcp-server lease print",def:"DHCP leases (who has which IP)"},
+    {term:"/ip firewall filter print",def:"Firewall rules with counters"},
+    {term:"/log print",def:"System log. Useful for troubleshooting."},
+    {term:"/system resource print",def:"CPU, RAM, uptime, RouterOS version"},
+    {term:"/system routerboard print",def:"Hardware info, firmware version"},
+    {term:"/ip service print",def:"Active services and their ports"},
   ]},
 ];
 
@@ -247,7 +334,7 @@ function render() {
     .filter(cat => cat.items.length > 0);
 
   if (!filtered.length) {
-    content.innerHTML = `<div class="empty"><div class="empty-icon">¯\\_(ツ)_/¯</div><div>Terminit ei leitud: "${q}"</div></div>`;
+    content.innerHTML = `<div class="empty"><div class="empty-icon">¯\\_(ツ)_/¯</div><div>No results for: "${q}"</div></div>`;
     return;
   }
 
@@ -255,23 +342,23 @@ function render() {
     <div class="section">
       <div class="sec-header" style="border-bottom:2px solid ${cat.color}">
         <span class="sec-title">${cat.title}</span>
-        <span class="sec-count" style="background:${cat.color}33;color:${cat.color}">${cat.items.length} terminit</span>
+        <span class="sec-count" style="background:${cat.color}33;color:${cat.color === '#1A1A2E' ? '#7DD3FC' : cat.color}">${cat.items.length} terms</span>
       </div>
       <div class="items">
         ${cat.items.map(item => `
           <div class="item" style="border-left:3px solid ${cat.color}">
-            <div class="term" style="color:${cat.id === 'commands' || cat.color === '#1E3A5F' ? '#7DD3FC' : cat.color}">${item.term}</div>
+            <div class="term" style="color:${['#1A1A2E','#334155'].includes(cat.color) ? '#7DD3FC' : cat.color};filter:brightness(1.25)">${item.term}</div>
             <div class="def">${item.def}</div>
           </div>
         `).join("")}
       </div>
     </div>
-  `).join("") + `<div id="tip"><span style="color:#7DD3FC">[TIP]</span> CLI-s kirjuta <span style="color:#A3E635">?</span> – näed kõiki saadaolevaid käske igal tasandil.</div>`;
+  `).join("") + `<div id="tip"><span style="color:#7DD3FC">[TIP]</span> In MikroTik CLI, type <span style="color:#A3E635">?</span> at any level to see available commands and parameters.</div>`;
 }
 
 function buildCats() {
   const cats = document.getElementById("cats");
-  cats.innerHTML = `<button class="cat-btn active" style="background:#CC2936;color:#fff" onclick="setCat('all',this)">Kõik</button>` +
+  cats.innerHTML = `<button class="cat-btn active" style="background:#CC2936;color:#fff" onclick="setCat('all',this)">All</button>` +
     DATA.map(cat => `<button class="cat-btn" onclick="setCat('${cat.id}',this)">${cat.title.split(" ").slice(1).join(" ")}</button>`).join("");
 }
 
@@ -289,34 +376,10 @@ function setCat(id, btn) {
   render();
 }
 
-// PWA install
-let deferredPrompt;
-window.addEventListener("beforeinstallprompt", e => {
-  e.preventDefault();
-  deferredPrompt = e;
-  document.getElementById("install-banner").classList.add("show");
-});
-
-function installApp() {
-  if (deferredPrompt) {
-    deferredPrompt.prompt();
-    deferredPrompt.userChoice.then(() => { deferredPrompt = null; hideBanner(); });
-  }
-}
-function hideBanner() {
-  document.getElementById("install-banner").classList.remove("show");
-}
-
-// Service Worker for offline
 if ("serviceWorker" in navigator) {
-  const swCode = `
-    const CACHE = "mikrotik-v1";
-    const FILES = [location.href];
-    self.addEventListener("install", e => e.waitUntil(caches.open(CACHE).then(c => c.addAll(FILES))));
-    self.addEventListener("fetch", e => e.respondWith(caches.match(e.request).then(r => r || fetch(e.request))));
-  `;
-  const blob = new Blob([swCode], {type: "application/javascript"});
-  navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(() => {});
+  const swCode = `const CACHE="miki-notes-v1";self.addEventListener("install",e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll([location.href]))));self.addEventListener("fetch",e=>e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request))));`;
+  const blob = new Blob([swCode], {type:"application/javascript"});
+  navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(()=>{});
 }
 
 buildCats();

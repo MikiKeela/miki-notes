@@ -17,7 +17,7 @@ Built as a single HTML file — no frameworks, no dependencies, works offline.
 
 ---
 
-## 📚 Topics Covered
+## 📚 Topics Covered — 29 categories, 385+ terms
 
 | Category | What's inside |
 |---|---|
@@ -33,10 +33,24 @@ Built as a single HTML file — no frameworks, no dependencies, works offline.
 | MikroTik – Firewall | Chains (input/forward/output), actions, connection states |
 | MikroTik – Bridge & VLAN | Bridge ports, VLAN ID, tagged/untagged, MAC flooding |
 | MikroTik – Wireless | SSID, modes, WPA2, bands, channel width |
-| Common Ports | FTP, SSH, DNS, HTTP, RDP, BGP, Winbox and more |
+| 802.11 Wi-Fi Standards | a/b/g/n/ac/ax speeds, 2.4 vs 5 GHz channels, WPA/WPA2/WPA3 |
+| RouterOS License Levels | L0–L6, CHR licensing, what each level unlocks |
+| IP Services & Access Control | /ip service, blocking IPs, input vs forward chain |
+| Backup vs Export | Binary vs plain text, what each includes, reboot needed? |
+| Queues – Deep Dive | FIFO/SFQ/RED/PCQ, priorities 1–8, first-match rule, PCQ classifiers |
+| ARP & MAC Addresses | ARP vs NDP, reply-only, valid/invalid MAC format, full duplex |
+| Wireless Advanced | Default Authenticate, Access List, WDS, station-bridge, rate flapping |
+| PPP & Tunnels | PPPoE broadcast domain, Secrets, E1/T1 limitation, PPTP |
+| Connection States | new/established/related/invalid, TCP states, firewall order |
+| RouterOS Packages | system, advanced-tools, routing, wireless — what each includes |
+| RouterBOARD Architectures | mipsbe, mipsle, powerpc, x86, arm — which board uses which |
+| Common Ports | FTP, SSH, DNS, HTTP, RDP, BGP, Winbox, SNMP and more |
 | Kali Linux Commands | ip, ifconfig, nmap, nmcli, iwconfig, dhclient... |
 | Network Security | CIA triad, IDS/IPS, DMZ, WPA2, Evil Twin, MITM, DoS |
-| Subnet Calculator | Live calculator + CIDR cheat sheet table |
+| CLI Quick Reference | Most-used /ip, /system, /interface commands |
+| 🧮 Subnet Calculator | Live calculator + CIDR cheat sheet table |
+| Tricky Exam Facts | 30+ common gotchas: Level 1 = infinite, mangle can't DROP, RED vs UDP... |
+| More Exam Q&A | Extra Q&A from MTCNA practice tests |
 
 ---
 

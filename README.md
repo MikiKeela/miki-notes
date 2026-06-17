@@ -3,7 +3,7 @@
 A personal mobile-friendly reference app for IT and networking topics.  
 Built as a single HTML file — no frameworks, no dependencies, works offline.
 
-🔗 **Live:** [mikikeela.github.io/mikrotik-spikker](https://mikikeela.github.io/miki-notes)
+🔗 **Live:** [mikikeela.github.io/miki-notes](https://mikikeela.github.io/miki-notes)
 
 ---
 

@@ -23,8 +23,8 @@
   #search::placeholder{color:#475569}
   #search:focus{border-color:#CC2936}
 
-  #cats{display:flex;gap:5px;margin-top:8px;flex-wrap:wrap}
-  .cat-btn{padding:3px 9px;border-radius:20px;border:none;cursor:pointer;font-size:11px;font-weight:600;background:#1E1E30;color:#64748B;transition:all .15s;font-family:inherit}
+  #cats{display:flex;gap:5px;margin-top:8px;flex-wrap:wrap;padding-bottom:2px}
+  .cat-btn{padding:3px 9px;border-radius:20px;border:none;cursor:pointer;font-size:11px;font-weight:600;background:#1E1E30;color:#64748B;transition:all .15s;font-family:inherit;white-space:nowrap;flex-shrink:0}
   .cat-btn.active{color:#fff}
 
   #content{padding:12px 10px;max-width:900px;margin:0 auto;padding-bottom:30px}
@@ -45,6 +45,25 @@
   #tip{margin-top:14px;padding:11px;background:#0F1824;border:1px solid #1E3A5F;border-radius:8px;font-family:monospace;font-size:11px;color:#64748B}
 
   @media(min-width:600px){.item{grid-template-columns:180px 1fr}.term{font-size:12.5px}.def{font-size:13px}}
+
+  /* Ports Table */
+  .ports-wrap{padding:4px 0}
+  .port-filters{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px}
+  .pf-btn{padding:3px 9px;border-radius:20px;border:none;cursor:pointer;font-size:11px;font-weight:600;background:#1E1E30;color:#64748B;font-family:inherit;transition:all .15s}
+  .pf-btn.on{background:#2C3E50;color:#fff}
+  .port-table{width:100%;border-collapse:collapse;font-family:monospace;border-radius:8px;overflow:hidden}
+  .port-table th{background:#1A1A28;color:#94A3B8;font-size:10px;padding:7px 8px;text-align:left;font-weight:700;letter-spacing:0.5px;border-bottom:1px solid #2A2A3A}
+  .port-table td{padding:8px 8px;border-bottom:1px solid #1A1A28;font-size:12px;vertical-align:middle}
+  .port-table tr:last-child td{border-bottom:none}
+  .port-table tr:hover td{background:#12131E}
+  .pt-port{color:#A3E635;font-weight:700;white-space:nowrap}
+  .pt-svc{color:#E2E8F0;font-weight:600}
+  .pt-note{color:#64748B;font-size:11px}
+  .proto-tcp{background:#1e3a5f55;color:#60A5FA;padding:1px 5px;border-radius:3px;font-size:10px;font-weight:700}
+  .proto-udp{background:#14532d55;color:#4ADE80;padding:1px 5px;border-radius:3px;font-size:10px;font-weight:700}
+  .proto-both{background:#3b1a5a55;color:#C084FC;padding:1px 5px;border-radius:3px;font-size:10px;font-weight:700}
+  .tag-mt{background:#CC293633;color:#F87171;padding:1px 5px;border-radius:3px;font-size:9px;font-weight:700;margin-left:4px;vertical-align:middle}
+  .port-count{text-align:center;font-size:10px;color:#334155;font-family:monospace;margin-top:8px}
 
   /* Subnet Calculator */
   .calc-box{background:#12131E;border:1px solid #1E2030;border-radius:10px;padding:14px;margin-bottom:12px}
@@ -399,7 +418,7 @@ const DATA = [
     {term:"Level 5",def:"Includes L4 + 500 PPP tunnels + RADIUS client + hotspot. For larger deployments."},
     {term:"Level 6",def:"Unlimited everything. All features. For large ISPs and enterprises. Most expensive."},
     {term:"CHR (Cloud Hosted Router)",def:"Virtual RouterOS. L1=free/1Mbps, P1=1Gbps, P10=10Gbps, PU=unlimited. Licensed by throughput."},
-    {term:"E1/T1 + PPP",def:"Requires Level 4 minimum — L4 adds synchronous serial interface support and 200 PPP tunnels."},
+    {term:"E1/T1 + PPP",def:"CANNOT be done in RouterOS — E1/T1 synchronous serial with PPP is NOT supported, regardless of license level."},
     {term:"Wireless AP mode",def:"Requires Level 4 minimum — L3 only allows station (client) mode, not AP."},
     {term:"Hotspot",def:"Requires Level 5 or above."},
     {term:"/system license print",def:"CLI command to view current license level and features."},
@@ -660,7 +679,106 @@ const DATA = [
 
 let activeCat = "all";
 
+const PORTS_TABLE = [
+  {port:"80",     proto:"tcp",  service:"HTTP",               note:"Web traffic, plain text",                  group:"web"},
+  {port:"443",    proto:"tcp",  service:"HTTPS",              note:"Web traffic, encrypted (TLS)",             group:"web"},
+  {port:"8080",   proto:"tcp",  service:"HTTP-alt",           note:"Alternate HTTP, proxy",                    group:"web"},
+  {port:"22",     proto:"tcp",  service:"SSH",                note:"Encrypted CLI — replaces Telnet",          group:"remote"},
+  {port:"23",     proto:"tcp",  service:"Telnet",             note:"⚠️ Unencrypted CLI — avoid!",              group:"remote"},
+  {port:"3389",   proto:"tcp",  service:"RDP",                note:"Windows Remote Desktop",                   group:"remote"},
+  {port:"20,21",  proto:"tcp",  service:"FTP",                note:"File transfer. 21=control, 20=data",       group:"infra"},
+  {port:"53",     proto:"both", service:"DNS",                note:"UDP for queries, TCP for zone transfers",  group:"infra"},
+  {port:"67",     proto:"udp",  service:"DHCP Server",        note:"Server side",                              group:"infra"},
+  {port:"68",     proto:"udp",  service:"DHCP Client",        note:"Client side",                              group:"infra"},
+  {port:"69",     proto:"udp",  service:"TFTP",               note:"Trivial FTP — used by Netinstall",         group:"infra"},
+  {port:"123",    proto:"udp",  service:"NTP",                note:"Time synchronisation",                     group:"infra"},
+  {port:"161",    proto:"udp",  service:"SNMP",               note:"Network monitoring queries",               group:"infra"},
+  {port:"162",    proto:"udp",  service:"SNMP Trap",          note:"Device-initiated alerts",                  group:"infra"},
+  {port:"179",    proto:"tcp",  service:"BGP",                note:"Border Gateway Protocol",                  group:"infra"},
+  {port:"514",    proto:"udp",  service:"Syslog",             note:"Remote logging",                           group:"infra"},
+  {port:"IP:89",  proto:"—",   service:"OSPF",               note:"IP Protocol 89 — no port number",          group:"infra"},
+  {port:"1812",   proto:"udp",  service:"RADIUS Auth",        note:"Authentication",                           group:"infra"},
+  {port:"1813",   proto:"udp",  service:"RADIUS Acct",        note:"Accounting",                               group:"infra"},
+  {port:"25",     proto:"tcp",  service:"SMTP",               note:"Server-to-server email sending",           group:"mail"},
+  {port:"587",    proto:"tcp",  service:"SMTP (submission)",  note:"Client email submission",                  group:"mail"},
+  {port:"110",    proto:"tcp",  service:"POP3",               note:"Receive email — deletes from server",      group:"mail"},
+  {port:"143",    proto:"tcp",  service:"IMAP",               note:"Receive email — stays on server",          group:"mail"},
+  {port:"993",    proto:"tcp",  service:"IMAPS",              note:"IMAP over SSL",                            group:"mail"},
+  {port:"500",    proto:"udp",  service:"IKE / IPSec",        note:"IPSec key exchange",                       group:"vpn"},
+  {port:"1194",   proto:"both", service:"OpenVPN",            note:"Default OpenVPN port",                     group:"vpn"},
+  {port:"1701",   proto:"udp",  service:"L2TP",               note:"Layer 2 Tunneling Protocol",               group:"vpn"},
+  {port:"1723",   proto:"tcp",  service:"PPTP",               note:"+ IP Protocol 47 (GRE)",                   group:"vpn"},
+  {port:"4500",   proto:"udp",  service:"IPSec NAT-T",        note:"IPSec NAT traversal",                      group:"vpn"},
+  {port:"443",    proto:"tcp",  service:"SSTP",               note:"Same as HTTPS — hard to block",            group:"vpn"},
+  {port:"8291",   proto:"tcp",  service:"Winbox",             note:"MikroTik GUI tool",                        group:"mt", mt:true},
+  {port:"20561",  proto:"udp",  service:"MAC WinBox",         note:"Connect via MAC address",                  group:"mt", mt:true},
+  {port:"5678",   proto:"udp",  service:"MNDP",               note:"MikroTik Neighbor Discovery",              group:"mt", mt:true},
+  {port:"8728",   proto:"tcp",  service:"API",                note:"RouterOS API (plain)",                     group:"mt", mt:true},
+  {port:"8729",   proto:"tcp",  service:"API-SSL",            note:"RouterOS API (encrypted)",                 group:"mt", mt:true},
+];
+
+const PORT_GROUPS = [
+  {id:"all", label:"All"},
+  {id:"web", label:"🌐 Web"},
+  {id:"remote", label:"💻 Remote"},
+  {id:"infra", label:"🏗️ Infra"},
+  {id:"mail", label:"📧 Email"},
+  {id:"vpn", label:"🔒 VPN"},
+  {id:"mt", label:"🔴 MikroTik"},
+];
+
+let activePortGroup = "all";
+
+function protoTag(p) {
+  if (p==="tcp")  return `<span class="proto-tcp">TCP</span>`;
+  if (p==="udp")  return `<span class="proto-udp">UDP</span>`;
+  if (p==="both") return `<span class="proto-both">TCP+UDP</span>`;
+  return `<span style="color:#475569;font-size:10px">${p}</span>`;
+}
+
+function showPortsTable(q="") {
+  const content = document.getElementById("content");
+  const rows = PORTS_TABLE.filter(p =>
+    (activePortGroup==="all" || p.group===activePortGroup) &&
+    (!q || p.port.includes(q) || p.service.toLowerCase().includes(q) || p.note.toLowerCase().includes(q))
+  );
+
+  const filterBtns = PORT_GROUPS.map(g =>
+    `<button class="pf-btn${activePortGroup===g.id?' on':''}" onclick="setPortGroup('${g.id}',this)">${g.label}</button>`
+  ).join("");
+
+  const tableRows = rows.length ? rows.map(p => `
+    <tr>
+      <td class="pt-port">${p.port}</td>
+      <td>${protoTag(p.proto)}</td>
+      <td class="pt-svc">${p.service}${p.mt?'<span class="tag-mt">MT</span>':''}</td>
+      <td class="pt-note">${p.note}</td>
+    </tr>`).join("") :
+    `<tr><td colspan="4" style="text-align:center;color:#475569;padding:20px;font-family:monospace">No results</td></tr>`;
+
+  content.innerHTML = `
+    <div class="ports-wrap">
+      <div class="port-filters">${filterBtns}</div>
+      <table class="port-table">
+        <thead><tr>
+          <th>PORT</th><th>PROTO</th><th>SERVICE</th><th>NOTES</th>
+        </tr></thead>
+        <tbody>${tableRows}</tbody>
+      </table>
+      <div class="port-count">${rows.length} ports shown &nbsp;·&nbsp; <span style="color:#F87171">MT</span> = MikroTik-specific</div>
+    </div>`;
+}
+
+function setPortGroup(id, btn) {
+  activePortGroup = id;
+  document.querySelectorAll(".pf-btn").forEach(b => b.classList.remove("on"));
+  btn.classList.add("on");
+  showPortsTable(document.getElementById("search").value.toLowerCase());
+}
+
 function render() {
+  if (activeCat === "ports") { showPortsTable(document.getElementById("search").value.toLowerCase()); return; }
+
   const q = document.getElementById("search").value.toLowerCase();
   const content = document.getElementById("content");
 
